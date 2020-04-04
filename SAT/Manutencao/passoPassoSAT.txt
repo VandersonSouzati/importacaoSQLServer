@@ -1,0 +1,9 @@
+﻿IMPORTAÇÃO SAT************
+
+1- Renomear os arquivos, com o executavel FileRenomeation.exe, que se encontra na pasta Ex\
+
+2- Executar a importação de CFE, usando o SimLivros importação de CFE.
+
+3-Executar os scripts seguindo a ordem, mudando as variáveis @Empresa e @Cliente , do script ImportacaoSAT2
+
+4--Executar o ScriptGeraLivrisSAT, passando os parâmetros de empresa, data inicial, final e o codigo do cliente consumidor.

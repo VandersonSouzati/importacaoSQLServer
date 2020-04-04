@@ -1,0 +1,75 @@
+
+Declare @Empresa Char(02) ='10', 
+@DataInicial SmalldateTime = '20180501', 
+@DataFinal   SmalldateTime = '20180531', 
+@Serie Char(06) = 'Ecf01'
+
+select SUM(Valor_Nota) from Liv_Saidas 
+where Empresa=@Empresa and Data_Emissao between @DataInicial and @DataFinal
+and Serie = @Serie
+
+select SUM(p.Valor_Total), SUM(p.Vr_BCICMS), SUM(bc_pis), SUM(bc_cofins), SUM(vr_icms), SUM(vr_pis), SUM(vr_cofins)
+from Liv_Saidas s 
+inner join Liv_SaiProd p on p.empresa = s.empresa and p.Documento = s.Documento and p.Serie = s.Serie
+where s.Empresa=@Empresa and s.Data_Emissao between @DataInicial and @DataFinal
+and s.Serie = @Serie
+
+
+
+
+
+select 
+ --*
+ SUM(vr_total_item)
+  , SUM(bc_pis), SUM(bc_cofins), SUM(vr_icms), SUM(vr_pis), SUM(vr_cofins)
+from Liv_Itens_Cupons 
+where Documento in(
+select Lc.Documento
+from Liv_ReducaoZ Lr 
+INNER JOIN Liv_Cupons Lc on Lr.Empresa=Lc.Empresa and Lr.COO_Reducao=Lc.Documento and Lr.Maquina=Lc.Maquina
+INNER JOIN Liv_Itens_Cupons Li on Lc.Empresa=Li.Empresa and Lc.Documento=Li.Documento and Lc.Serie=Li.Serie and Lc.COO=Li.COO
+inner join liv_saidas S on (Lr.Empresa=s.empresa and Lr.CRZ=s.Documento and ('ECF'+RIGHT(RTRIM(LTRIM(LR.Maquina)),2)) = s.Serie)
+INNER JOIN LIV_SAIPROD P ON S.EMPRESA = P.EMPRESA AND S.DOCUMENTO = P.DOCUMENTO AND S.SERIE = P.SERIE AND LI.CODIGO_PRODUTO = P.PRODUTO
+WHERE LC.EMPRESA = @Empresa
+and S.Data_Emissao between @DataInicial and @DataFinal
+)
+and Empresa=@Empresa
+and cancelado ='0'
+
+select sum(o.vr_contabil), sum(o.icm_bc), sum(o.icm_valor)
+from Liv_Saidas s 
+--inner join Liv_SaiProd p on p.empresa = s.empresa and p.Documento = s.Documento and p.Serie = s.Serie
+inner join Liv_SaiNatOp o on o.Empresa = s.Empresa and o.Documento = s.Documento and o.Serie = s.serie
+where s.Empresa=@Empresa and s.Data_Emissao between @DataInicial and @DataFinal
+and s.Serie = @Serie
+
+
+
+
+/*
+
+Select Trib, Seq,Vr_BCICMS,BC_PIS,bc_cofins, Vr_ICMS,Vr_PIS, 
+vr_cofins,ST_PIS, ST_COFINS,
+Porc_PIS, Porc_COFINS,Aliq_ICMS,*
+--begin tran 
+--up11date Loj_Itens_Cupons_Imposto set
+--bc_pis = vr_bcicms, bc_cofins = vr_bcicms, vr_pis = round(vr_bcicms *0.0065,2), vr_cofins = round(vr_bcicms *0.03 ,2),
+--st_pis ='01', st_cofins='01', porc_pis ='0.65', porc_cofins='3'  
+from Loj_Itens_Cupons_Imposto 
+where Empresa='01' and Data >'20180630'
+--commit
+
+*/
+
+/*lOJA ***/
+/*
+Select 
+C.Empresa,C.Maquina, C.data, C.Controle, 
+C.Sub_total ,sum(I.Sub_Total- I.Desconto_Rateio)
+ From Loj_Cupons C 
+ Inner Join Loj_Itens_Cupons I On I.Empresa = C.Empresa and I.Maquina = C.Maquina and C.Data = I.Data 
+                               and C.Controle = i.Controle
+Where C.Empresa ='10' and C.Data >='20180501' and c.Status ='C'
+Group By C.Empresa,C.Maquina, C.data, C.Controle, C.Sub_Total
+Having C.Sub_total <> sum(I.Sub_Total- I.Desconto_Rateio)
+*/

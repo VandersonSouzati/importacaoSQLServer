@@ -1,0 +1,20 @@
+Passo a Passo Execuções de script Camila Klein
+----------------------------------------------------------------------------------------------
+1 - Atualizar as procedures contidas em:
+ .\Passos\ProceduresLivros
+______________________________________________________________________________________________
+2 - Executar os scrips em ordem numérica contidos em:
+ .\Passos\SQL FirstPart
+______________________________________________________________________________________________
+3 - Executar a importação dos cupons, pela tela de importação de ECF no Livros:
+	 .\Passos\Exe
+______________________________________________________________________________________________
+ *Caminho da Tela - Manutenções -> Arquivos Cf-e(XML)/ECF -> Importação Arquivos ECF
+  Colocar o mês  e o Ano de Referência, selecionar o diretório que contém os arquivos e clicar no botão
+	"Importar Arquivos".
+**** Obs se o mês for "" Vazio será importado todos os arquivos existentes naquele diretório.
+**** Obs o Ano sempre deve ser informado.
+______________________________________________________________________________________________
+4 - Executar os scrips em ordem numérica contidos em:
+ .\Passos\SQL SecondPart
+______________________________________________________________________________________________
